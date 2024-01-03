@@ -22,6 +22,7 @@ jobs:
       - name: Unzip tag
         run: |
           tag=${{ github.event.inputs.tag }}
+          pwd
           unzip -qq "${tag}.zip"
           mv "${tag}"/* .
           rm -rf "${tag}" "${tag}.zip"
