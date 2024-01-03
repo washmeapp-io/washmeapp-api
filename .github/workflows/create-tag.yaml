@@ -31,7 +31,7 @@ jobs:
 
       - name: Ensure Clean Working Directory
         run: |
-          git diff --exit-code || (echo "Uncommitted changes found"; exit 1)
+          git diff --exit-code || (echo "Uncommitted changes found."; exit 1)
           git diff --cached --exit-code || (echo "Changes in staging area found"; exit 1)
 
       - name: Bump version and create tag
