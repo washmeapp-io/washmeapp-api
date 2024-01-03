@@ -1,0 +1,35 @@
+name: Create Tag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js and dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build TypeScript code
+        run: npm run build
+
+      - name: Set up Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Bump version and create tag
+        run: |
+          npm version patch -m "Bump version to %s [skip ci]"
+          git push --follow-tags
