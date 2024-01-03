@@ -36,6 +36,9 @@ jobs:
           echo "Latest tag: $latest_tag"
           echo "::set-output name=latest_tag::$latest_tag"
 
+      - name: Set up custom token
+        run: echo "GH_ACTION_TOKEN=${{ secrets.GH_ACTION_TOKEN }}" >> $GITHUB_ENV
+
       - name: Create a new Git tag
         run: |
           latest_tag=${{ steps.get_latest_tag.outputs.latest_tag }}
