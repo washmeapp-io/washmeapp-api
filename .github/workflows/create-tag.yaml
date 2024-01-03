@@ -29,6 +29,11 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
+      - name: Ensure Clean Working Directory
+        run: |
+          git diff --exit-code || (echo "Uncommitted changes found"; exit 1)
+          git diff --cached --exit-code || (echo "Changes in staging area found"; exit 1)
+
       - name: Bump version and create tag
         run: |
           npm version patch -m "Bump version to %s [skip ci]"
