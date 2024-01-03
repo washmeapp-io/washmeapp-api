@@ -47,8 +47,9 @@ jobs:
             # If no tags exist, create the first tag
             new_tag="v1.0.0"
           else
-            # If tags exist, check if the middle digit is 999, increment the first digit
+            # If tags exist, increment the middle digit
             if [ "$(echo "$latest_tag" | cut -d'.' -f2)" -eq 999 ]; then
+              # If middle digit is 999, increment the first digit
               new_tag=$(echo "$latest_tag" | awk -F. -v OFS=. '{$1 = $1 + 1; $2 = 0; $3 = 0;} 1')
             else
               # Otherwise, increment the middle digit
