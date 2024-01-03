@@ -10,7 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: dev
     steps:
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
