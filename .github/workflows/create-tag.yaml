@@ -65,4 +65,4 @@ jobs:
 
       - name: Use the new tag
         run: |
-          echo "New tag created: ${{ steps.create_and_publish_tag.outputs.new_tag }}"
+          echo "New tag: ${{ steps.create_and_publish_tag.outputs.new_tag }}"
