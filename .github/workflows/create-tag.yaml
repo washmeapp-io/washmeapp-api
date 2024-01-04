@@ -48,7 +48,10 @@ jobs:
           minor="${version_parts[1]}"
           patch="${version_parts[2]}"
 
-          if [ "$patch" -eq 999 ]; then
+          if [ "$latest_tag" == "v0.0.0" ]; then
+            # If no tags exist, start from 1.0.0
+            new_tag="v1.0.0"
+          elif [ "$patch" -eq 999 ]; then
             # Increment the major digit and reset the middle and minor
             new_tag="v$((major + 1)).0.0"
           else
