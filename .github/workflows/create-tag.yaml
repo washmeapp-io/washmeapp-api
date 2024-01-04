@@ -23,8 +23,8 @@ jobs:
 
       - name: Auto-increment version and publish
         run: |
-          # Obtener el último tag
-          LAST_TAG=$(git describe --abbrev=0 --tags)
+          # Obtener el último tag o establecer el primer tag si no hay ninguno
+          LAST_TAG=$(git describe --abbrev=0 --tags || echo "v1.0.0")
 
           # Dividir el tag en partes
           IFS='.' read -r -a VERSION_PARTS <<< "$LAST_TAG"
