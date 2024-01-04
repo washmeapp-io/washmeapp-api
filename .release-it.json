@@ -1,0 +1,12 @@
+{
+  "github": {
+    "release": true
+  },
+  "git": {
+    "requireBranch": "main",
+    "commitMessage": "Version v${version}"
+  },
+  "hooks": {
+    "after:bump": "npx auto-changelog -p"
+  }
+}
