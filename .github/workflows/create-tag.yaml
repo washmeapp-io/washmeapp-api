@@ -35,7 +35,7 @@ jobs:
       - name: Get the latest tag
         id: get_latest_tag
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null)
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null) || echo "v0.0.0"
           echo "Latest tag: $latest_tag"
           echo "::set-output name=latest_tag::$latest_tag"
 
@@ -48,7 +48,7 @@ jobs:
           minor="${version_parts[1]}"
           patch="${version_parts[2]}"
 
-          if [ -z "$latest_tag" ]; then
+          if [ "$latest_tag" == "v0.0.0" ]; then
             # No tags exist, start from v1.0.0
             new_tag="v1.0.0"
           else
