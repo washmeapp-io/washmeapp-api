@@ -39,7 +39,7 @@ jobs:
           echo "Latest tag: $latest_tag"
           echo "::set-output name=latest_tag::$latest_tag"
 
-      - name: Create a new Git tag
+      - name: Create and Publish New Tag
         id: create_and_publish_tag
         run: |
           latest_tag=${{ steps.get_latest_tag.outputs.latest_tag }}
@@ -48,21 +48,16 @@ jobs:
           minor="${version_parts[1]}"
           patch="${version_parts[2]}"
 
-          if [ "$latest_tag" == "v0.0.0" ]; then
-            # If no tags exist, start from 1.0.0
-            new_tag="v1.0.0"
-          elif [ "$patch" -eq 999 ]; then
-            # Increment the major digit and reset the middle and minor
-            new_tag="v$((major + 1)).0.0"
-          else
-            # Increment the middle digit and reset the minor
+          while git rev-parse "$latest_tag" >/dev/null 2>&1; do
+            # Tag already exists, increment the minor version
             new_tag="v$major.$((minor + 1)).0"
-          fi
+            minor=$((minor + 1))
+          done
 
           git tag -a "$new_tag" -m "Bump version to $new_tag [skip ci]"
           git push origin "$new_tag"
           echo "::set-output name=new_tag::$new_tag"
 
-      - name: Use the new tag
+      - name: Use the New Tag
         run: |
           echo "New tag: ${{ steps.create_and_publish_tag.outputs.new_tag }}"
