@@ -40,37 +40,26 @@ jobs:
           echo "::set-output name=latest_tag::$latest_tag"
 
       - name: Create a new Git tag
-        id: create_new_tag
+        id: create_and_publish_tag
         run: |
           latest_tag=${{ steps.get_latest_tag.outputs.latest_tag }}
-          if [ "$latest_tag" == "v0.0.0" ]; then
-            # If no tags exist, create the first tag
-            new_tag="v1.0.0"
+          IFS='.' read -ra version_parts <<< "$latest_tag"
+          major="${version_parts[0]}"
+          minor="${version_parts[1]}"
+          patch="${version_parts[2]}"
+
+          if [ "$patch" -eq 999 ]; then
+            # Increment the major digit and reset the middle and minor
+            new_tag="v$((major + 1)).0.0"
           else
-            # If tags exist, increment the middle digit
-            if [ "$(echo "$latest_tag" | cut -d'.' -f2)" -eq 999 ]; then
-              # If middle digit is 999, increment the first digit
-              new_tag=$(echo "$latest_tag" | awk -F. -v OFS=. '{$1 = $1 + 1; $2 = 0; $3 = 0;} 1')
-            else
-              # Otherwise, increment the middle digit
-              new_tag=$(echo "$latest_tag" | awk -F. -v OFS=. '{$2 = $2 + 1; $3 = 0;} 1')
-            fi
+            # Increment the middle digit and reset the minor
+            new_tag="v$major.$((minor + 1)).0"
           fi
 
-          # Check if the tag already exists
-          if git rev-parse "$new_tag" >/dev/null 2>&1; then
-            # If the tag exists, increment the last digit and create the new tag
-            new_tag=$(echo "$new_tag" | awk -F. -v OFS=. '{$3 = $3 + 1;} 1')
-            git tag -a "$new_tag" -m "Bump version to $new_tag [skip ci]"
-            git push origin "$new_tag"
-            echo "::set-output name=new_tag::$new_tag"
-          else
-            # If the tag doesn't exist, create it
-            git tag -a "$new_tag" -m "Bump version to $new_tag [skip ci]"
-            git push origin "$new_tag"
-            echo "::set-output name=new_tag::$new_tag"
-          fi
+          git tag -a "$new_tag" -m "Bump version to $new_tag [skip ci]"
+          git push origin "$new_tag"
+          echo "::set-output name=new_tag::$new_tag"
 
       - name: Use the new tag
         run: |
-          echo "New tag: ${{ steps.create_new_tag.outputs.new_tag }}"
+          echo "New tag: ${{ steps.create_and_publish_tag.outputs.new_tag }}"
