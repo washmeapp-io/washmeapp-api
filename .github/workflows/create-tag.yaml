@@ -35,7 +35,7 @@ jobs:
       - name: Get the latest tag
         id: get_latest_tag
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null)
           echo "Latest tag: $latest_tag"
           echo "::set-output name=latest_tag::$latest_tag"
 
@@ -48,11 +48,16 @@ jobs:
           minor="${version_parts[1]}"
           patch="${version_parts[2]}"
 
-          while git rev-parse "$latest_tag" >/dev/null 2>&1; do
-            # Tag already exists, increment the minor version
-            new_tag="v$major.$((minor + 1)).0"
-            minor=$((minor + 1))
-          done
+          if [ -z "$latest_tag" ]; then
+            # No tags exist, start from v1.0.0
+            new_tag="v1.0.0"
+          else
+            while git rev-parse "$new_tag" >/dev/null 2>&1; do
+              # Tag already exists, increment the minor version
+              new_tag="v$major.$((minor + 1)).0"
+              minor=$((minor + 1))
+            done
+          fi
 
           git tag -a "$new_tag" -m "Bump version to $new_tag [skip ci]"
           git push origin "$new_tag"
