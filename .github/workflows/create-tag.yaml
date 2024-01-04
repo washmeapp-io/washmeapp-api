@@ -1,69 +1,46 @@
-name: Create Tag
+name: Auto-increment version and publish
 
 on:
   push:
     branches:
       - main
 
-permissions: write-all
-
 jobs:
-  create-tag:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install Node.js and dependencies
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 14
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build TypeScript code
-        run: npm run build
-
-      - name: Set up Git
+      - name: Auto-increment version and publish
         run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git config --global credential.helper '!f() { echo "username=GH_ACTION_TOKEN"; echo "password=${GH_ACTION_TOKEN}"; }; f'
+          # Obtener el último tag
+          LAST_TAG=$(git describe --abbrev=0 --tags)
 
-      - name: Get the latest tag
-        id: get_latest_tag
-        run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null)
-          if [ -n "$latest_tag" ]; then
-            echo "Latest tag: $latest_tag"
-          else
-            echo "No tags found. Setting initial tag to v0.0.0."
-            latest_tag="v0.0.0"
-            echo "Latest tag: $latest_tag"
+          # Dividir el tag en partes
+          IFS='.' read -r -a VERSION_PARTS <<< "$LAST_TAG"
+
+          # Incrementar el segundo número
+          VERSION_PARTS[1]=$((VERSION_PARTS[1] + 1))
+
+          # Verificar si el segundo número es 1000
+          if [ "${VERSION_PARTS[1]}" -eq 1000 ]; then
+            # Incrementar el primer número y resetear el segundo a 0
+            VERSION_PARTS[0]=$((VERSION_PARTS[0] + 1))
+            VERSION_PARTS[1]=0
           fi
-          echo "::set-output name=latest_tag::$latest_tag"
 
-      - name: Create and Publish New Tag
-        id: create_and_publish_tag
-        run: |
-          latest_tag=${{ steps.get_latest_tag.outputs.latest_tag }}
-          IFS='.' read -ra version_parts <<< "$latest_tag"
-          major="${version_parts[0]}"
-          minor="${version_parts[1]}"
-          patch="${version_parts[2]}"
+          # Crear el nuevo tag
+          NEW_TAG="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
 
-          while git rev-parse "$new_tag" >/dev/null 2>&1; do
-            # Tag already exists, increment the minor version
-            new_tag="v$major.$((minor + 1)).0"
-            minor=$((minor + 1))
-          done
-
-          git tag -a "$new_tag" -m "Bump version to $new_tag [skip ci]"
-          git push origin "$new_tag"
-          echo "::set-output name=new_tag::$new_tag"
-
-      - name: Use the New Tag
-        run: |
-          echo "New tag: ${{ steps.create_and_publish_tag.outputs.new_tag }}"
+          git tag "$NEW_TAG"
+          git push origin "$NEW_TAG"
