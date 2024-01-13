@@ -16,12 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build TypeScript code
-        run: npm run build
-
       - name: Create Tag
         run: git tag ${{ github.event.inputs.tag_name }}
 
