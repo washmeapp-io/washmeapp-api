@@ -31,4 +31,4 @@ jobs:
         run: npm run build
 
       - name: Upload dist folder to S3
-        run: aws s3 sync dist/ s3://my-bucket-27b1a78
+        run: aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}
