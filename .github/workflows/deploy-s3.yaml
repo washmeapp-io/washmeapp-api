@@ -30,6 +30,9 @@ jobs:
       - name: Build TypeScript code
         run: npm run build
 
+      - name: Zip the build output
+        run: zip -r code.zip dist/
+
       - name: Create S3 Bucket if it doesn't exist
         id: create-bucket
         run: |
@@ -40,5 +43,5 @@ jobs:
             echo "S3 bucket already exists: ${{ secrets.S3_BUCKET_NAME }}"
           fi
 
-      - name: Upload dist folder to S3
-        run: aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/users-api
+      - name: Upload code ZIP to S3
+        run: aws s3 sync code.zip s3://${{ secrets.S3_BUCKET_NAME }}/users-api/code.zip
