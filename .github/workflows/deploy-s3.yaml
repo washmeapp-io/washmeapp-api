@@ -31,7 +31,9 @@ jobs:
         run: npm run build
 
       - name: Zip the build output
-        run: cd dist && zip -r ../code.zip *
+        run: |
+          cd dist
+          zip -r ../code.zip .
 
       - name: Create S3 Bucket if it doesn't exist
         id: create-bucket
