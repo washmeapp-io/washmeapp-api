@@ -1,17 +1,50 @@
+import login from "./login";
+
 export const handler = async (event: any): Promise<any> => {
   // Extract the HTTP method and path from the event object
   const httpMethod = event.httpMethod;
   const path = event.path;
 
-  console.log(`HTTP Method: ${httpMethod}`);
-  console.log(`Path: ${path}`);
+  // Attempt to parse the request body if present
+  let requestBody;
+  if (event.body) {
+    try {
+      requestBody = JSON.parse(event.body);
+    } catch (error) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          message: "Invalid JSON format in request body.",
+        }),
+      };
+    }
+  }
 
-  const message = `Hello World from washme app! Invoked by ${path} with ${httpMethod} method.`;
+  const resource = `${httpMethod}-${path}`;
+  switch (resource) {
+    case "POST-/users/login":
+      if (requestBody && requestBody.username && requestBody.password) {
+        return login(requestBody.username, requestBody.password);
+      } else {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({
+            message: "Please verify the inputs",
+          }),
+        };
+      }
+      break;
 
-  console.log(`Returning message: ${message}`);
+    default:
+      getNotFoundResponse(path, httpMethod);
+  }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message, path, httpMethod }),
-  };
+  return getNotFoundResponse(path, httpMethod);
 };
+
+function getNotFoundResponse(path: string, httpMethod: string) {
+  return {
+    statusCode: 400,
+    body: JSON.stringify({ message: "NOT FOUND", path, httpMethod }),
+  };
+}
