@@ -4,7 +4,6 @@ export const handler = async (event: any): Promise<any> => {
   // Extract the HTTP method and path from the event object
   const httpMethod = event.httpMethod;
   const path = event.path;
-
   // Attempt to parse the request body if present
   let requestBody;
   if (event.body) {
