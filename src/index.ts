@@ -28,8 +28,8 @@ export const handler = async (event: any): Promise<any> => {
     const resource = `${httpMethod}-${path}`;
     switch (resource) {
       case "POST-/users/login":
-        if (requestBody && requestBody.username && requestBody.password) {
-          return login(requestBody.username, requestBody.password);
+        if (requestBody && requestBody.username) {
+          return login(requestBody.username);
         } else {
           return {
             statusCode: 400,

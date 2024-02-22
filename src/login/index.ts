@@ -6,7 +6,7 @@ import {
 
 const client = new CognitoIdentityProviderClient({ region: "us-east-1" });
 
-export default async function (username: string, password: string) {
+export default async function (username: string) {
   const signInParams = {
     AuthFlow: AuthFlowType.CUSTOM_AUTH,
     ClientId: process.env.USER_POOL_CLIENT_ID,
