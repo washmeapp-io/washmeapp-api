@@ -12,6 +12,7 @@ const client = new CognitoIdentityProviderClient({ region: "us-east-1" });
 
 export default async function (username: string) {
   const secrets = await getSecrets({ secretName: "cognitoDetails" });
+  console.log("secrets here");
   console.log(secrets);
   const signInParams: InitiateAuthCommandInput = {
     AuthFlow: AuthFlowType.CUSTOM_AUTH,
