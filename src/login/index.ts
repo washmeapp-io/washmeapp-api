@@ -30,6 +30,7 @@ export default async function (username: string) {
     };
   } catch (error: any) {
     if (error.message === "User does not exist.") {
+      console.log(`User does not exist, creating new user ${username}`);
       try {
         const createUserParams: AdminCreateUserCommandInput = {
           UserPoolId: secrets["userPoolId"],
@@ -58,15 +59,22 @@ export default async function (username: string) {
           body: JSON.stringify(response.AuthenticationResult),
         };
       } catch (createError: any) {
+        console.log(
+          `Someting went wrong trying to create user and sign in ${username}`
+        );
+        console.error(createError);
         return {
           statusCode: 400,
           body: JSON.stringify({ message: createError.message }),
         };
       }
+    } else {
+      console.log(`Someting went wrong trying to sign in ${username}`);
+      console.error(error);
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: error.message }),
+      };
     }
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ message: error.message }),
-    };
   }
 }
