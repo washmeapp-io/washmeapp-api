@@ -18,6 +18,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.505.0"
+    "@aws-sdk/client-cognito-identity-provider": "^3.505.0",
+    "@aws-sdk/client-secrets-manager": "^3.521.0"
   }
 }

@@ -6,13 +6,16 @@ import {
   InitiateAuthCommand,
   InitiateAuthCommandInput,
 } from "@aws-sdk/client-cognito-identity-provider";
+import { getSecrets } from "../secrets";
 
 const client = new CognitoIdentityProviderClient({ region: "us-east-1" });
 
 export default async function (username: string) {
+  const secrets = await getSecrets({ secretName: "cognitoDetails" });
+  console.log(secrets);
   const signInParams: InitiateAuthCommandInput = {
     AuthFlow: AuthFlowType.CUSTOM_AUTH,
-    ClientId: process.env.USER_POOL_CLIENT_ID,
+    ClientId: secrets["userPoolClientId"],
     AuthParameters: {
       USERNAME: username,
     },
@@ -28,7 +31,7 @@ export default async function (username: string) {
     if (error.message === "User does not exist.") {
       try {
         const createUserParams: AdminCreateUserCommandInput = {
-          UserPoolId: process.env.USER_POOL_ID, // Ensure this is set in your environment variables
+          UserPoolId: secrets["userPoolId"],
           Username: username,
           UserAttributes: [
             {
