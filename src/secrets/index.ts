@@ -7,10 +7,9 @@ interface GetSecretsParams {
   secretName: string;
 }
 
-const client = new SecretsManagerClient();
-
 export async function getSecrets(args: GetSecretsParams) {
   try {
+    const client = new SecretsManagerClient();
     const command = new GetSecretValueCommand({ SecretId: args.secretName });
     const response = await client.send(command);
     const secretString = response.SecretString;
