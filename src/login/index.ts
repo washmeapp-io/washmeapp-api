@@ -8,15 +8,15 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 import { getSecrets } from "../secrets";
 
-const client = new CognitoIdentityProviderClient({ region: "us-east-1" });
 
 export default async function (username: string) {
-  const secrets = await getSecrets({ secretName: "cognitoScrets" });
-  console.log("secrets here");
-  console.log(secrets);
+  const {COGNITO_SECRET_NAME, REGION} = process.env;
+  const cognitoSecrets = await getSecrets({secretName: COGNITO_SECRET_NAME!!, region: REGION!!});
+  const client = new CognitoIdentityProviderClient({region: REGION!!});
+
   const signInParams: InitiateAuthCommandInput = {
     AuthFlow: AuthFlowType.CUSTOM_AUTH,
-    ClientId: secrets["userPoolClientId"],
+    ClientId: cognitoSecrets["userPoolClientId"],
     AuthParameters: {
       USERNAME: username,
     },
@@ -33,7 +33,7 @@ export default async function (username: string) {
       console.log(`User does not exist, creating new user ${username}`);
       try {
         const createUserParams: AdminCreateUserCommandInput = {
-          UserPoolId: secrets["userPoolId"],
+          UserPoolId: cognitoSecrets["userPoolId"],
           Username: username,
           UserAttributes: [
             {
@@ -47,7 +47,7 @@ export default async function (username: string) {
         console.log(`User created successfully ${username}`);
         const signInParams: InitiateAuthCommandInput = {
           AuthFlow: AuthFlowType.CUSTOM_AUTH,
-          ClientId: secrets["userPoolClientId"],
+          ClientId: cognitoSecrets["userPoolClientId"],
           AuthParameters: {
             USERNAME: username,
           },

@@ -5,11 +5,12 @@ import {
 
 interface GetSecretsParams {
   secretName: string;
+  region: string;
 }
 
 export async function getSecrets(args: GetSecretsParams) {
   try {
-    const client = new SecretsManagerClient();
+    const client = new SecretsManagerClient({region: args.region});
     const command = new GetSecretValueCommand({ SecretId: args.secretName });
     const response = await client.send(command);
     const secretString = response.SecretString;
