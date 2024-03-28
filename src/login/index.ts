@@ -44,6 +44,7 @@ export default async function (username: string) {
           MessageAction: "SUPPRESS", // Use this to prevent sending a confirmation email immediately
         };
         await client.send(new AdminCreateUserCommand(createUserParams));
+        console.log(`User created successfully ${username}`);
         const signInParams: InitiateAuthCommandInput = {
           AuthFlow: AuthFlowType.CUSTOM_AUTH,
           ClientId: secrets["userPoolClientId"],
