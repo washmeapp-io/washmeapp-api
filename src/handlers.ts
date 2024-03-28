@@ -1,8 +1,8 @@
-import { defineAuthChallenge } from "./cognito";
+import {defineAuthChallenge, createAuthChallenge} from "./cognito";
 import login from "./login";
 import { getNotFoundResponse } from "./utils";
 
-export const handleCognitoTriggerEvents = (event: any) => {
+export const handleCognitoTriggerEvents = async (event: any) => {
   console.log(`received trigger ${event.triggerSource}`);
   switch (event.triggerSource) {
     case "DefineAuthChallenge_Authentication":
@@ -10,7 +10,7 @@ export const handleCognitoTriggerEvents = (event: any) => {
       break;
     case "CreateAuthChallenge_Authentication":
       console.log("CreateAuthChallenge_Authentication here");
-      // Handle create auth challenge logic here
+      await createAuthChallenge(event)
       break;
     case "VerifyAuthChallengeResponse_Authentication":
       console.log("VerifyAuthChallengeResponse_Authentication here");
