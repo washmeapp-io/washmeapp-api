@@ -46,7 +46,7 @@ export default async function (username: string) {
         await client.send(new AdminCreateUserCommand(createUserParams));
         const signInParams: InitiateAuthCommandInput = {
           AuthFlow: AuthFlowType.CUSTOM_AUTH,
-          ClientId: process.env.USER_POOL_CLIENT_ID,
+          ClientId: secrets["userPoolClientId"],
           AuthParameters: {
             USERNAME: username,
           },
