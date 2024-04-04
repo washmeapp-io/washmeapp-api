@@ -1,18 +1,13 @@
 import {saveEmailOTP} from "../services/otpService";
+import {sendEmailMessage} from "../services/emailService";
 
 export default async function createAuthChallenge(event: any) {
   console.log("CreateAuthChallenge_Authentication here");
 
   // Generate a unique one-time code (OTC) for authentication
-  const oneTimeCode = Math.random().toString(10).substr(2, 6); // Example: generate a 6-digit code
-  console.log("ONE TIME CODE IS", oneTimeCode, "EMAIL", event.request.userAttributes.email)
+  const oneTimeCode = Math.random().toString(10).substr(2, 6);
   await saveEmailOTP(event.request.userAttributes.email, oneTimeCode)
-
-  // Ideally, save this code along with the user identifier in a secure, temporary store (DynamoDB, etc.)
-  // You'll need to verify this code in the VerifyAuthChallengeResponse trigger
-
-  // Send the code to the user's email. Implement this part according to your email sending mechanism.
-  // sendEmail(event.request.userAttributes.email, oneTimeCode);
+  await sendEmailMessage(event.request.userAttributes.email, oneTimeCode)
 
   // Set the challenge metadata so you can verify it later
 
