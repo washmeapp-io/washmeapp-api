@@ -3,15 +3,12 @@ import login from "./login";
 import { getNotFoundResponse } from "./utils";
 
 export const handleCognitoTriggerEvents = async (event: any) => {
-  console.log(`received trigger ${event.triggerSource}`);
+  console.log(`Received cognito trigger ${event.triggerSource}`);
   switch (event.triggerSource) {
     case "DefineAuthChallenge_Authentication":
-      defineAuthChallenge(event);
-      break;
+      return defineAuthChallenge(event);
     case "CreateAuthChallenge_Authentication":
-      console.log("CreateAuthChallenge_Authentication here");
-      await createAuthChallenge(event)
-      break;
+      return await createAuthChallenge(event)
     case "VerifyAuthChallengeResponse_Authentication":
       console.log("VerifyAuthChallengeResponse_Authentication here");
       // Handle verify auth challenge response logic here

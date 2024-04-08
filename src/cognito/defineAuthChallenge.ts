@@ -1,5 +1,5 @@
 export default function (event: any) {
-  console.log("Received Cognito trigger DefineAuthChallenge_Authenticatio");
+  console.log("Handling Cognito trigger DefineAuthChallenge_Authentication");
   // Handle define auth challenge logic here
   if (event.request.session && event.request.session.length === 0) {
     // Instruct Cognito to initiate the custom auth flow and present a challenge to the user

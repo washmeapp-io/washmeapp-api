@@ -2,7 +2,7 @@ import {saveEmailOTP} from "../services/otpService";
 import {sendEmailMessage} from "../services/emailService";
 
 export default async function createAuthChallenge(event: any) {
-  console.log("CreateAuthChallenge_Authentication here");
+  console.log("Handling Cognito trigger CreateAuthChallenge_Authentication");
 
   // Generate a unique one-time code (OTC) for authentication
   const oneTimeCode = Math.random().toString(10).substr(2, 6);
