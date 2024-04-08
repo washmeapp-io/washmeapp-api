@@ -24,6 +24,11 @@ export default async function (username: string) {
 
   try {
     const response = await client.send(new InitiateAuthCommand(signInParams));
+    console.log(`Login process started successfully for challenge ${response.ChallengeName}`);
+    console.log("response.AuthenticationResult")
+    console.log(response.AuthenticationResult)
+    console.log("response.ChallengeParameters")
+    console.log(response.ChallengeParameters)
     return {
       statusCode: 200,
       body: JSON.stringify(response.AuthenticationResult),
