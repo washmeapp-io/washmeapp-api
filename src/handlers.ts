@@ -1,5 +1,6 @@
 import {defineAuthChallenge, createAuthChallenge} from "./cognito";
-import login from "./login";
+import initiateAuth from "./http/initiate-auth";
+import completeAuth from "./http/complete-auth";
 import { getNotFoundResponse } from "./utils";
 
 export const handleCognitoTriggerEvents = async (event: any) => {
@@ -45,7 +46,7 @@ export const handleHttpRequests = (event: any) => {
   switch (resource) {
     case "POST-/users/send-otp":
       if (requestBody && requestBody.username) {
-        return login(requestBody.username);
+        return initiateAuth(requestBody.username);
       } else {
         return {
           statusCode: 400,
@@ -54,7 +55,17 @@ export const handleHttpRequests = (event: any) => {
           }),
         };
       }
-      break;
+    case "POST-/users/verify-otp":
+      if (requestBody && requestBody.username && requestBody.otp && requestBody.session) {
+        return completeAuth(requestBody.username, requestBody.otp, requestBody.session);
+      } else {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({
+            message: "Please verify the inputs",
+          }),
+        };
+      }
 
     default:
       getNotFoundResponse(path, httpMethod);

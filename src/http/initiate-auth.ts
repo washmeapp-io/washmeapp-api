@@ -6,7 +6,7 @@ import {
   InitiateAuthCommand,
   InitiateAuthCommandInput,
 } from "@aws-sdk/client-cognito-identity-provider";
-import { getSecrets } from "../secrets";
+import {getSecrets} from "../secrets";
 
 
 export default async function (username: string) {
@@ -75,15 +75,15 @@ export default async function (username: string) {
         console.error(createError);
         return {
           statusCode: 400,
-          body: JSON.stringify({ message: createError.message }),
+          body: JSON.stringify({message: createError.message}),
         };
       }
     } else {
-      console.log(`Someting went wrong trying to sign in ${username}`);
+      console.log(`Something went wrong trying to sign in ${username}`);
       console.error(error);
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: error.message }),
+        body: JSON.stringify({message: error.message}),
       };
     }
   }

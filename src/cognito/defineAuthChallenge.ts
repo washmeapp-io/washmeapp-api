@@ -1,3 +1,5 @@
+import {AuthFlowType} from "@aws-sdk/client-cognito-identity-provider";
+
 export default function (event: any) {
   console.log("Handling Cognito trigger DefineAuthChallenge_Authentication");
   // Handle define auth challenge logic here
@@ -5,7 +7,7 @@ export default function (event: any) {
     // Instruct Cognito to initiate the custom auth flow and present a challenge to the user
     event.response.issueTokens = false;
     event.response.failAuthentication = false;
-    event.response.challengeName = "OTP_CHALLENGE";
+    event.response.challengeName = AuthFlowType.CUSTOM_AUTH;
   } else {
     // Evaluate the session to determine if the user has successfully completed all challenges
     // Assume the user has provided the correct answer for simplicity
