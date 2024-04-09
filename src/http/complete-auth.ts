@@ -1,13 +1,10 @@
 import {
-  AdminCreateUserCommand,
-  AdminCreateUserCommandInput,
-  AuthFlowType,
   CognitoIdentityProviderClient,
-  InitiateAuthCommand,
-  InitiateAuthCommandInput, RespondToAuthChallengeCommand, RespondToAuthChallengeCommandInput,
+  RespondToAuthChallengeCommand,
+  RespondToAuthChallengeCommandInput
 } from "@aws-sdk/client-cognito-identity-provider";
 import { getSecrets } from "../secrets";
-import {ChallengeNameType} from "@aws-sdk/client-cognito-identity-provider/dist-types/models/models_0";
+import {ChallengeNameType} from "@aws-sdk/client-cognito-identity-provider";
 
 
 export default async function (username: string, otp: string, session: string) {
