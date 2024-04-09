@@ -62,7 +62,11 @@ export default async function (username: string) {
         );
         return {
           statusCode: 200,
-          body: JSON.stringify(response.AuthenticationResult),
+          body: JSON.stringify({
+            challengeName: response.ChallengeName,
+            challengeParameters: response.ChallengeParameters,
+            session: response.Session
+          }),
         };
       } catch (createError: any) {
         console.log(
