@@ -23,7 +23,7 @@ export default async function createAuthChallenge(event: any) {
   };
 
   // Specify the challenge you expect the user to complete upon next request
-  event.response.challengeMetadata = 'PASSWORDLESS_LOGIN_CHALLENGE';
+  event.response.challengeMetadata = 'OTP_CHALLENGE';
 
   return event;
 };

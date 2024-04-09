@@ -9,6 +9,8 @@ export default function (event: any) {
   } else {
     // Evaluate the session to determine if the user has successfully completed all challenges
     // Assume the user has provided the correct answer for simplicity
+    console.log("Into define auth challenge")
+    console.log(event.request.session)
     const allChallengesMet =
       event.request.session.slice(-1)[0].challengeResult === true;
     if (allChallengesMet) {
@@ -21,4 +23,5 @@ export default function (event: any) {
       event.response.failAuthentication = true;
     }
   }
+  return event
 }
