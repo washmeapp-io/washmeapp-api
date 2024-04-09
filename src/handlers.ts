@@ -43,7 +43,7 @@ export const handleHttpRequests = (event: any) => {
 
   const resource = `${httpMethod}-${path}`;
   switch (resource) {
-    case "POST-/users/login":
+    case "POST-/users/send-otp":
       if (requestBody && requestBody.username) {
         return login(requestBody.username);
       } else {
