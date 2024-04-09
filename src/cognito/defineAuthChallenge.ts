@@ -5,7 +5,7 @@ export default function (event: any) {
     // Instruct Cognito to initiate the custom auth flow and present a challenge to the user
     event.response.issueTokens = false;
     event.response.failAuthentication = false;
-    event.response.challengeName = "CUSTOM_CHALLENGE";
+    event.response.challengeName = "OTP_CHALLENGE";
   } else {
     // Evaluate the session to determine if the user has successfully completed all challenges
     // Assume the user has provided the correct answer for simplicity
