@@ -7,7 +7,8 @@ import { getSecrets } from "../secrets";
 import {ChallengeNameType} from "@aws-sdk/client-cognito-identity-provider";
 
 
-export default async function (username: string, otp: string, session: string) {
+export default async function (username: string, otp: string, session: string, context: any) {
+  console.log(`Creating RespondToAuthChallengeCommandInput request for response the challenge - Request Id ${context.awsRequestId}`);
   const {COGNITO_SECRET_NAME, REGION} = process.env;
   const cognitoSecrets = await getSecrets({secretName: COGNITO_SECRET_NAME!!, region: REGION!!});
   const client = new CognitoIdentityProviderClient({region: REGION!!});
@@ -23,7 +24,7 @@ export default async function (username: string, otp: string, session: string) {
 
   try {
     const response = await client.send(new RespondToAuthChallengeCommand(respondAuthChallengeParams));
-    console.log("Authentication challenge responded, result", response.AuthenticationResult);
+    console.log(`Authentication challenge responded, ${response.AuthenticationResult} - Request Id ${context.awsRequestId}`);
     if (response.AuthenticationResult) {
       return {
         statusCode: 200,
@@ -43,7 +44,7 @@ export default async function (username: string, otp: string, session: string) {
     }
   } catch (error: any) {
     console.log(
-      `Something went wrong trying to respond challenge for username ${username}`
+      `Something went wrong trying to respond challenge for username ${username} - Request Id ${context.awsRequestId}`
     );
     console.error(error);
     return {

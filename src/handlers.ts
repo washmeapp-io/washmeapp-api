@@ -3,24 +3,24 @@ import initiateAuth from "./http/initiate-auth";
 import completeAuth from "./http/complete-auth";
 import { getNotFoundResponse } from "./utils";
 
-export const handleCognitoTriggerEvents = async (event: any) => {
-  console.log(`Received cognito trigger ${event.triggerSource}`);
+export const handleCognitoTriggerEvents = async (event: any, context: any) => {
+  console.log(`Received cognito trigger ${event.triggerSource} - RequestId: ${context.awsRequestId}`);
   switch (event.triggerSource) {
     case "DefineAuthChallenge_Authentication":
-      return defineAuthChallenge(event);
+      return defineAuthChallenge(event, context);
     case "CreateAuthChallenge_Authentication":
-      return await createAuthChallenge(event)
+      return await createAuthChallenge(event, context)
     case "VerifyAuthChallengeResponse_Authentication":
-      return verifyAuthChallenge(event)
+      return verifyAuthChallenge(event, context)
     default:
       break;
   }
 };
 
-export const handleHttpRequests = (event: any) => {
+export const handleHttpRequests = (event: any, context: any) => {
   const httpMethod = event.httpMethod;
   const path = event.path;
-  console.log(`Received method ${httpMethod} in the path ${path}`);
+  console.log(`Received method ${httpMethod} in the path ${path} - RequestId: ${context.awsRequestId}`);
   // Attempt to parse the request body if present
   let requestBody;
   if (event.body) {
@@ -40,7 +40,7 @@ export const handleHttpRequests = (event: any) => {
   switch (resource) {
     case "POST-/users/send-otp":
       if (requestBody && requestBody.username) {
-        return initiateAuth(requestBody.username);
+        return initiateAuth(requestBody.username, context);
       } else {
         return {
           statusCode: 400,
@@ -51,7 +51,7 @@ export const handleHttpRequests = (event: any) => {
       }
     case "POST-/users/verify-otp":
       if (requestBody && requestBody.username && requestBody.otp && requestBody.session) {
-        return completeAuth(requestBody.username, requestBody.otp, requestBody.session);
+        return completeAuth(requestBody.username, requestBody.otp, requestBody.session, context);
       } else {
         return {
           statusCode: 400,
