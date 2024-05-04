@@ -1,4 +1,4 @@
-import {defineAuthChallenge, createAuthChallenge} from "./cognito";
+import {defineAuthChallenge, createAuthChallenge, verifyAuthChallenge} from "./cognito";
 import initiateAuth from "./http/initiate-auth";
 import completeAuth from "./http/complete-auth";
 import { getNotFoundResponse } from "./utils";
@@ -11,16 +11,10 @@ export const handleCognitoTriggerEvents = async (event: any) => {
     case "CreateAuthChallenge_Authentication":
       return await createAuthChallenge(event)
     case "VerifyAuthChallengeResponse_Authentication":
-      console.log("VerifyAuthChallengeResponse_Authentication here");
-      // Handle verify auth challenge response logic here
-      break;
-    // Add other cases as needed
+      return verifyAuthChallenge(event)
     default:
-      // Handle unexpected trigger sources or provide a default response
       break;
   }
-  // Return the event object back to Cognito
-  return event;
 };
 
 export const handleHttpRequests = (event: any) => {

@@ -1,4 +1,5 @@
 import defineAuthChallenge from "./defineAuthChallenge";
 import createAuthChallenge from "./createAuthChallenge";
+import verifyAuthChallenge from "./verifyAuthChallenge";
 
-export {defineAuthChallenge, createAuthChallenge};
+export {defineAuthChallenge, createAuthChallenge, verifyAuthChallenge};

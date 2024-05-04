@@ -1,6 +1,6 @@
 import {AuthFlowType} from "@aws-sdk/client-cognito-identity-provider";
 
-export default function (event: any) {
+export default function defineAuthChallenge(event: any) {
   console.log("Handling Cognito trigger DefineAuthChallenge_Authentication");
   // Handle define auth challenge logic here
   if (event.request.session && event.request.session.length === 0) {
