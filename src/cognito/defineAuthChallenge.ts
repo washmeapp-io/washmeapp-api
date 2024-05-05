@@ -1,26 +1,20 @@
-import {AuthFlowType} from "@aws-sdk/client-cognito-identity-provider";
 
 export default function defineAuthChallenge(event: any, context: any) {
   console.log('defineAuthChallenge - Handling Cognito trigger DefineAuthChallenge_Authentication');
   // Handle define auth challenge logic here
-  if (event.request.session && event.request.session.length === 0) {
-    // Instruct Cognito to initiate the custom auth flow and present a challenge to the user
+  if (event.request.session.length === 0 || event.request.session.find((challenge: any) => challenge.challengeName === "CUSTOM_CHALLENGE" && !challenge.challengeResult)) {
+    // Start the challenge
     event.response.issueTokens = false;
     event.response.failAuthentication = false;
-    event.response.challengeName = AuthFlowType.CUSTOM_AUTH;
+    event.response.challengeName = "CUSTOM_CHALLENGE";
+  } else if (event.request.session.find((challenge: any) => challenge.challengeName === "CUSTOM_CHALLENGE" && challenge.challengeResult)) {
+    // Complete the challenge successfully
+    event.response.issueTokens = true;
+    event.response.failAuthentication = false;
   } else {
-    // Evaluate the session to determine if the user has successfully completed all challenges
-    // Assume the user has provided the correct answer for simplicity
-    const lastChallenge = event.request.session.slice(-1)[0];
-    if (lastChallenge.challengeResult === true) {
-      // Issue tokens if all challenges are met
-      event.response.issueTokens = true;
-      event.response.failAuthentication = false;
-    } else {
-      // Fail authentication if the user has not met all challenges
-      event.response.issueTokens = false;
-      event.response.failAuthentication = true;
-    }
+    // Fail the challenge
+    event.response.issueTokens = false;
+    event.response.failAuthentication = true;
   }
   console.log('defineAuthChallenge - Handled Cognito trigger DefineAuthChallenge_Authentication');
   return event

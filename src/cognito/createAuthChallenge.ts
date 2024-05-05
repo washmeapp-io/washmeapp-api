@@ -23,9 +23,7 @@ export default async function createAuthChallenge(event: any, _context: any) {
   event.response.privateChallengeParameters = {
     answer: oneTimeCode,
   };
-
-  // Specify the challenge you expect the user to complete upon next request
-  event.response.challengeMetadata = 'OTP_CHALLENGE';
+  
   console.log('createAuthChallenge - Handled Cognito trigger CreateAuthChallenge_Authentication');
   return event;
 };
