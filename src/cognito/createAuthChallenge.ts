@@ -2,11 +2,11 @@ import {saveEmailOTP} from "../services/otpService";
 import {sendEmailMessage} from "../services/emailService";
 
 export default async function createAuthChallenge(event: any, _context: any) {
-  console.log('Handling Cognito trigger CreateAuthChallenge_Authentication');
+  console.log('createAuthChallenge - Handling Cognito trigger CreateAuthChallenge_Authentication');
 
   // Generate a unique one-time code (OTC) for authentication
   const oneTimeCode = Math.random().toString(10).substr(2, 6);
-  console.log(`Generated new OTP Code ${oneTimeCode} for email ${event.request.userAttributes.email}`);
+  console.log(`createAuthChallenge - Generated new OTP Code ${oneTimeCode} for email ${event.request.userAttributes.email}`);
   await saveEmailOTP(event.request.userAttributes.email, oneTimeCode)
   await sendEmailMessage(event.request.userAttributes.email, oneTimeCode)
 
@@ -19,12 +19,13 @@ export default async function createAuthChallenge(event: any, _context: any) {
 
   // Add the secret login code to the private challenge parameters
   // so it can be verified by the VerifyAuthChallengeResponse trigger
+  console.log('createAuthChallenge - Storing privateChallengeParameters.answer');
   event.response.privateChallengeParameters = {
     answer: oneTimeCode,
   };
 
   // Specify the challenge you expect the user to complete upon next request
   event.response.challengeMetadata = 'OTP_CHALLENGE';
-  console.log('Handled Cognito trigger CreateAuthChallenge_Authentication');
+  console.log('createAuthChallenge - Handled Cognito trigger CreateAuthChallenge_Authentication');
   return event;
 };

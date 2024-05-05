@@ -3,9 +3,9 @@ export default async function verifyAuthChallenge(event: any, context: any) {
 
   // Retrieve the user's answer and the correct answer from the private challenge parameters
   const userAnswer = event.request.challengeAnswer;
-  const correctAnswer = event.request.privateChallengeParameters.answer;
-  console.log("User answer: " + userAnswer);
-  console.log("Correct answer: " + correctAnswer);
+  console.log("verifyAuthChallenge - User answer: " + userAnswer);
+  const correctAnswer = event.request.privateChallengeParameters ? event.request.privateChallengeParameters.answer : 'no-response';
+  console.log("verifyAuthChallenge - Correct answer: " + correctAnswer);
 
   // Verify the user's answer
   event.response.answerCorrect = userAnswer === correctAnswer;
