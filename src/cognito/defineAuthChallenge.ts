@@ -1,7 +1,7 @@
 import {AuthFlowType} from "@aws-sdk/client-cognito-identity-provider";
 
 export default function defineAuthChallenge(event: any, context: any) {
-  console.log(`Handling Cognito trigger DefineAuthChallenge_Authentication - Request Id ${context.awsRequestId}`);
+  console.log('defineAuthChallenge - Handling Cognito trigger DefineAuthChallenge_Authentication');
   // Handle define auth challenge logic here
   if (event.request.session && event.request.session.length === 0) {
     // Instruct Cognito to initiate the custom auth flow and present a challenge to the user
@@ -22,6 +22,6 @@ export default function defineAuthChallenge(event: any, context: any) {
       event.response.failAuthentication = true;
     }
   }
-  console.log(`Handled Cognito trigger DefineAuthChallenge_Authentication - Request Id ${context.awsRequestId}`);
+  console.log('defineAuthChallenge - Handled Cognito trigger DefineAuthChallenge_Authentication');
   return event
 }

@@ -1,5 +1,5 @@
 export default async function verifyAuthChallenge(event: any, context: any) {
-  console.log(`Handling Cognito trigger VerifyAuthChallengeResponse_Authentication - Request Id ${context.awsRequestId}`, JSON.stringify(event));
+  console.log(`verifyAuthChallenge - Handling Cognito trigger VerifyAuthChallengeResponse_Authentication ${JSON.stringify(event)}`);
 
   // Retrieve the user's answer and the correct answer from the private challenge parameters
   const userAnswer = event.request.challengeAnswer;
@@ -10,7 +10,7 @@ export default async function verifyAuthChallenge(event: any, context: any) {
   // Verify the user's answer
   event.response.answerCorrect = userAnswer === correctAnswer;
 
-  console.log("Returning event: event.response.answerCorrect", event.response.answerCorrect);
-  console.log(`Handled Cognito trigger VerifyAuthChallengeResponse_Authentication - Request Id ${context.awsRequestId}`, JSON.stringify(event));
+  console.log("verifyAuthChallenge - event.response.answerCorrect", event.response.answerCorrect);
+  console.log(`verifyAuthChallenge - Handled Cognito trigger VerifyAuthChallengeResponse_Authentication, ${JSON.stringify(event)}`);
   return event;
 };

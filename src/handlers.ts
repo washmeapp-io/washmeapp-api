@@ -4,7 +4,7 @@ import completeAuth from "./http/complete-auth";
 import { getNotFoundResponse } from "./utils";
 
 export const handleCognitoTriggerEvents = async (event: any, context: any) => {
-  console.log(`Received cognito trigger ${event.triggerSource} - RequestId: ${context.awsRequestId}`);
+  console.log(`handleCognitoTriggerEvents - Received cognito trigger ${event.triggerSource}`);
   switch (event.triggerSource) {
     case "DefineAuthChallenge_Authentication":
       return defineAuthChallenge(event, context);
@@ -20,7 +20,7 @@ export const handleCognitoTriggerEvents = async (event: any, context: any) => {
 export const handleHttpRequests = (event: any, context: any) => {
   const httpMethod = event.httpMethod;
   const path = event.path;
-  console.log(`Received method ${httpMethod} in the path ${path} - RequestId: ${context.awsRequestId}`);
+  console.log(`handleHttpRequests - Received method ${httpMethod} in the path ${path}`);
   // Attempt to parse the request body if present
   let requestBody;
   if (event.body) {

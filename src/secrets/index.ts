@@ -17,7 +17,7 @@ export async function getSecrets(args: GetSecretsParams) {
     const secrets = JSON.parse(secretString ?? "{}");
     return secrets;
   } catch (error) {
-    console.error("Error retrieving secrets:", error);
+    console.error("getSecrets - Error retrieving secrets:", error);
     throw error;
   }
 }
