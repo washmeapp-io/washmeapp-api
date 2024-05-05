@@ -12,8 +12,9 @@ import {getSecrets} from "../secrets";
 export default async function (username: string, context: any) {
   console.log(`initiate-auth - Creating InitiateAuthCommandInput request for login process`);
   const {COGNITO_SECRET_NAME, REGION} = process.env;
-  const cognitoSecrets = await getSecrets({secretName: COGNITO_SECRET_NAME!!, region: REGION!!});
-  const client = new CognitoIdentityProviderClient({region: REGION!!});
+  const cognitoSecrets = await getSecrets({secretName: COGNITO_SECRET_NAME!, region: REGION!});
+  console.log(`initiate-auth - Secrets obtained processing auth for ${username} - ${JSON.stringify(cognitoSecrets)}`);
+  const client = new CognitoIdentityProviderClient({region: REGION!});
 
   const signInParams: InitiateAuthCommandInput = {
     AuthFlow: AuthFlowType.CUSTOM_AUTH,
