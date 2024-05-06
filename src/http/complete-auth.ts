@@ -7,11 +7,10 @@ import { getSecrets } from "../secrets";
 import {ChallengeNameType} from "@aws-sdk/client-cognito-identity-provider";
 
 
-export default async function (username: string, otp: string, session: string, context: any) {
+export default async function (username: string, otp: string, session: string, _context: any) {
   console.log(`complete-auth - Received request to RespondToAuthChallengeCommandInput request for ${username}, answer is ${otp}`);
   const {COGNITO_SECRET_NAME, REGION} = process.env;
   const cognitoSecrets = await getSecrets({secretName: COGNITO_SECRET_NAME!, region: REGION!});
-  console.log(`complete-auth - Secrets obtained processing auth for ${username} - ${JSON.stringify(cognitoSecrets)}`);
   const client = new CognitoIdentityProviderClient({region: REGION!});
 
   const respondAuthChallengeParams: RespondToAuthChallengeCommandInput = {
@@ -46,7 +45,7 @@ export default async function (username: string, otp: string, session: string, c
     }
   } catch (error: any) {
     console.log(
-      `complete-auth - Something went wrong trying to respond challenge for username ${username} - Request Id ${context.awsRequestId}`
+      `complete-auth - Something went wrong trying to respond challenge for username ${username}`
     );
     console.error(error);
     return {

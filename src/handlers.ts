@@ -1,6 +1,7 @@
 import {defineAuthChallenge, createAuthChallenge, verifyAuthChallenge} from "./cognito";
 import initiateAuth from "./http/initiate-auth";
 import completeAuth from "./http/complete-auth";
+import refreshSession from "./http/refresh-session";
 import { getNotFoundResponse } from "./utils";
 
 export const handleCognitoTriggerEvents = async (event: any, context: any) => {
@@ -52,6 +53,18 @@ export const handleHttpRequests = (event: any, context: any) => {
     case "POST-/users/verify-otp":
       if (requestBody && requestBody.username && requestBody.otp && requestBody.session) {
         return completeAuth(requestBody.username, requestBody.otp, requestBody.session, context);
+      } else {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({
+            message: "Please verify the inputs",
+          }),
+        };
+      }
+
+    case "POST-/users/refresh-session":
+      if (requestBody && requestBody.refreshToken) {
+        return refreshSession(requestBody.refreshToken, context);
       } else {
         return {
           statusCode: 400,

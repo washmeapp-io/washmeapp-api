@@ -9,11 +9,10 @@ import {
 import {getSecrets} from "../secrets";
 
 
-export default async function (username: string, context: any) {
+export default async function (username: string, _context: any) {
   console.log(`initiate-auth - Creating InitiateAuthCommandInput request for login process`);
   const {COGNITO_SECRET_NAME, REGION} = process.env;
   const cognitoSecrets = await getSecrets({secretName: COGNITO_SECRET_NAME!, region: REGION!});
-  console.log(`initiate-auth - Secrets obtained processing auth for ${username} - ${JSON.stringify(cognitoSecrets)}`);
   const client = new CognitoIdentityProviderClient({region: REGION!});
 
   const signInParams: InitiateAuthCommandInput = {
@@ -25,6 +24,7 @@ export default async function (username: string, context: any) {
   };
 
   try {
+    console.log(`initiate-auth - Sending InitiateAuthCommand request to username ${username}`);
     const response = await client.send(new InitiateAuthCommand(signInParams));
     console.log(`initiate-auth - Login process started successfully for challenge ${response.ChallengeName}`);
     return {
@@ -72,7 +72,7 @@ export default async function (username: string, context: any) {
         };
       } catch (createError: any) {
         console.log(
-          `initiate-auth - Something went wrong trying to create user and sign in ${username} - Request Id ${context.awsRequestId}`
+          `initiate-auth - Something went wrong trying to create user and sign in ${username}`
         );
         console.error(createError);
         return {
@@ -81,7 +81,7 @@ export default async function (username: string, context: any) {
         };
       }
     } else {
-      console.log(`initiate-auth - Something went wrong trying to sign in ${username} - Request Id ${context.awsRequestId}`);
+      console.log(`initiate-auth - Something went wrong trying to sign in ${username}`);
       console.error(error);
       return {
         statusCode: 400,
