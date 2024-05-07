@@ -9,8 +9,7 @@ export default async function createAuthChallenge(event: any, _context: any) {
     const oneTimeCode = Math.random().toString(10).substr(2, 6);
     console.log(`createAuthChallenge - Generated new OTP Code ${oneTimeCode} for email ${event.request.userAttributes.email}`);
 
-    await sendEmailMessage(event.request.userAttributes.email, oneTimeCode)
-    // We already have the OTP, we don't need to wait for save in dynamo
+    sendEmailMessage(event.request.userAttributes.email, oneTimeCode)
     saveEmailOTP(event.request.userAttributes.email, oneTimeCode)
 
     // Set the challenge metadata so you can verify it later
