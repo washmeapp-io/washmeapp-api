@@ -9,11 +9,16 @@ export default async function createAuthChallenge(event: any, _context: any) {
     const oneTimeCode = Math.random().toString(10).substr(2, 6);
     console.log(`createAuthChallenge - Generated new OTP Code ${oneTimeCode} for email ${event.request.userAttributes.email}`);
 
-    sendEmailMessage(event.request.userAttributes.email, oneTimeCode)
-    saveEmailOTP(event.request.userAttributes.email, oneTimeCode)
+    const messageId = await sendEmailMessage(event.request.userAttributes.email, oneTimeCode)
+    if (!messageId) {
+      const errorMessage = `createAuthChallenge - error sending OTP Code ${oneTimeCode} for email ${event.request.userAttributes.email}`
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+    console.log(`createAuthChallenge - Sending email - new OTP Code ${oneTimeCode} for email ${event.request.userAttributes.email}`);
+    await saveEmailOTP(event.request.userAttributes.email, oneTimeCode, messageId);
 
     // Set the challenge metadata so you can verify it later
-
     event.response.publicChallengeParameters = {
       // This information will be public to the client (e.g., the app calling Cognito)
       email: event.request.userAttributes.email

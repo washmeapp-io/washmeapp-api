@@ -25,6 +25,7 @@ export const sendEmailMessage = async (recipientEmail: string, otpCode: string,)
     const command: SendEmailCommand = new SendEmailCommand(params);
     const response: SendEmailCommandOutput = await sesClient.send(command);
     console.log(`sendEmailMessage - Email verification sent to: ${recipientEmail} - messageId - ${response.MessageId}`);
+    return response.MessageId
   } catch (error) {
     console.error("sendEmailMessage - An error occurred", error);
   }

@@ -10,9 +10,9 @@ export const handleCognitoTriggerEvents = async (event: any, context: any) => {
     case "DefineAuthChallenge_Authentication":
       return defineAuthChallenge(event, context);
     case "CreateAuthChallenge_Authentication":
-      return createAuthChallenge(event, context)
+      return await createAuthChallenge(event, context);
     case "VerifyAuthChallengeResponse_Authentication":
-      return verifyAuthChallenge(event, context)
+      return verifyAuthChallenge(event, context);
     default:
       break;
   }
